@@ -1,8 +1,11 @@
 from telegram import Update
 from telegram.ext import Application, CallbackContext
+# noinspection PyProtectedMember
+from telegram.ext._utils.types import HandlerCallback
 
-from .context import Context
+from .update_context import UpdateContext
 from .handler import Handler
+from .types import Callback
 
 
 class App:
@@ -24,9 +27,9 @@ class App:
         self._raw.run_polling()
 
 
-def adapt_callback(callback: ...):
+def adapt_callback(callback: Callback) -> HandlerCallback:
     def wrapper(update: Update, raw_context: CallbackContext):
-        context = Context(update, raw_context)
+        context = UpdateContext(update, raw_context)
         return callback(context)
 
     return wrapper
